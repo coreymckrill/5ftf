@@ -60,7 +60,7 @@ function register_custom_post_type() {
 		'description'         => __( 'Post Type Description', 'wporg' ),
 		'labels'              => $labels,
 		'supports'            => array( 'title', 'editor', 'thumbnail', 'revisions', 'custom-fields', 'author' ),
-		'taxonomies'          => array( 'category', 'post_tag' ),
+		'taxonomies'          => array( '5ftf_tax' ),
 		'hierarchical'        => false,
 		'public'              => true,
 		'show_ui'             => true,
