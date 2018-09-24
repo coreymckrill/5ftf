@@ -59,7 +59,7 @@ function register_custom_post_type() {
 		'label'               => __( 'Post Type', 'wporg' ),
 		'description'         => __( 'Post Type Description', 'wporg' ),
 		'labels'              => $labels,
-		'supports'            => array( 'title', 'editor', 'thumbnail', 'revisions', 'custom-fields' ),
+		'supports'            => array( 'title', 'editor', 'thumbnail', 'revisions', 'custom-fields', 'author' ),
 		'taxonomies'          => array( 'category', 'post_tag' ),
 		'hierarchical'        => false,
 		'public'              => true,
