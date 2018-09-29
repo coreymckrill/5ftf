@@ -5,6 +5,8 @@
  * etc. once we have a better idea of what the CPT will be called.
  */
 
+// todo normalize text domain across all files
+
 namespace WordPressDotOrg\FiveForTheFuture\Post;
 defined( 'WPINC' ) || die();
 
@@ -59,7 +61,7 @@ function register_custom_post_type() {
 		'label'               => __( 'Post Type', 'wporg' ),
 		'description'         => __( 'Post Type Description', 'wporg' ),
 		'labels'              => $labels,
-		'supports'            => array( 'title', 'editor', 'thumbnail', 'revisions', 'custom-fields', 'author' ),
+		'supports'            => array( 'title', 'editor', 'revisions', 'author' ),
 		'taxonomies'          => array( '5ftf_tax' ),
 		'hierarchical'        => false,
 		'public'              => true,
@@ -85,10 +87,10 @@ function register_custom_post_type() {
 function register_custom_taxonomy() {
 	// TODO update the labels
 	$labels = array(
-		'name'                       => _x( 'Taxonomies', 'Taxonomy General Name', 'wporg' ),
-		'singular_name'              => _x( 'Taxonomy', 'Taxonomy Singular Name', 'wporg' ),
-		'menu_name'                  => __( 'Taxonomy', 'wporg' ),
-		'all_items'                  => __( 'All Items', 'wporg' ),
+		'name'                       => _x( 'Companies', 'Company General Name', 'wporg' ),
+		'singular_name'              => _x( 'Company', 'Company Singular Name', 'wporg' ),
+		'menu_name'                  => __( 'Companies', 'wporg' ),
+		'all_items'                  => __( 'All Companies', 'wporg' ),
 		'parent_item'                => __( 'Parent Item', 'wporg' ),
 		'parent_item_colon'          => __( 'Parent Item:', 'wporg' ),
 		'new_item_name'              => __( 'New Item Name', 'wporg' ),
@@ -118,5 +120,11 @@ function register_custom_taxonomy() {
 		'show_in_rest'      => true,
 	);
 
-	register_taxonomy( '5ftf_tax', array( '5ftf_post' ), $args );
+	register_taxonomy( '5ftf_company', array( CPT_SLUG ), $args );
+
+
+	// also add one for skills - design,dev, project management, etc
+
+	// and another for using as a case study / featuring on the front end
+	// - this way we can use this as a database of contributors but not all of them have to be on the front end
 }
