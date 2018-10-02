@@ -5,7 +5,7 @@
 		</h3>
 
 		<p>
-			<?php _e( 'Many freelancers and companies in the WordPress ecosystem choose to contribute 5% of their time back towards sustaining and improving the WordPress project. This helps to ensure that WordPress remains a vibrant platform to build a business on, and prevents a <a href="">tragedy of the commons</a>.', 'wordpressdotorg' ); ?>
+			<?php _e( 'Many companies in the WordPress ecosystem choose to contribute 5% of their time back towards sustaining and improving the WordPress project. This helps to ensure that WordPress remains a vibrant platform to build a business on, and prevents a <a href="">tragedy of the commons</a>.', 'wordpressdotorg' ); ?>
 		</p>
 	</section>
 
@@ -31,6 +31,8 @@
 		<p>Have a question? Ready to get started? Get in touch and we'll help you find where you're needed the most.</p>
 
 		<form action="" method="POST">
+			nonce_field
+
 			inputs for name
 			hours per month
 			wporg username

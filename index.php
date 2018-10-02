@@ -18,9 +18,9 @@ define( __NAMESPACE__ . '\URL', plugin_dir_url( __FILE__ ) );
  *
  */
 function load() {
-	require_once PATH . 'includes/post.php';
-	require_once PATH . 'includes/post-meta.php';
-	require_once PATH . 'includes/blocks.php';
+	require_once PATH . 'includes/company.php';
+	require_once PATH . 'includes/company-meta.php';
+	require_once PATH . 'includes/shortcodes.php';
 }
 
 add_action( 'plugins_loaded', __NAMESPACE__ . '\load' );

@@ -6,7 +6,7 @@
  */
 
 namespace WordPressDotOrg\FiveForTheFuture\Blocks;
-use WordPressDotOrg\FiveForTheFuture\Post;
+use WordPressDotOrg\FiveForTheFuture\Company;
 
 defined( 'WPINC' ) || die();
 
@@ -17,7 +17,7 @@ defined( 'WPINC' ) || die();
  */
 function render_shortcode() {
 	$params = array(
-		'post_type'      => Post\CPT_SLUG,
+		'post_type'      => Company\CPT_SLUG,
 		'post_status'    => 'publish',
 		'posts_per_page' => 2,
 		'orderby'        => 'rand',
@@ -27,11 +27,14 @@ function render_shortcode() {
 	$contributors = get_posts( $params );
 
 	ob_start();
-	require_once( __DIR__ . '/views/front-end.php' );
+	require_once( dirname( __DIR__ ) . '/views/front-end.php' );
 	return ob_get_clean();
 }
 
 add_shortcode( 'five_for_the_future', __NAMESPACE__ . '\render_shortcode' );
+
+// shortcode for pledge form
+// form handler for pledge form
 
 function register() {
 	//register_block_type();

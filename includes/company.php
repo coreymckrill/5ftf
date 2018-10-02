@@ -7,10 +7,10 @@
 
 // todo normalize text domain across all files
 
-namespace WordPressDotOrg\FiveForTheFuture\Post;
+namespace WordPressDotOrg\FiveForTheFuture\Company;
 defined( 'WPINC' ) || die();
 
-const CPT_SLUG = '5ftf_post';
+const CPT_SLUG = '5ftf_company';
 
 /**
  *
@@ -28,15 +28,15 @@ add_action( 'init', __NAMESPACE__ . '\register', 0 );
 function register_custom_post_type() {
 	// TODO update the labels
 	$labels = array(
-		'name'                  => _x( 'Post Types', 'Post Type General Name', 'wporg' ),
-		'singular_name'         => _x( 'Post Type', 'Post Type Singular Name', 'wporg' ),
-		'menu_name'             => __( 'Post Types', 'wporg' ),
-		'name_admin_bar'        => __( 'Post Type', 'wporg' ),
+		'name'                  => _x( 'Companies', 'Companies General Name', 'wporg' ),
+		'singular_name'         => _x( 'Company', 'Company Type Singular Name', 'wporg' ),
+		'menu_name'             => __( 'Five for the Future', 'wporg' ),
+		'name_admin_bar'        => __( 'Company', 'wporg' ),
 		'archives'              => __( 'Item Archives', 'wporg' ),
 		'attributes'            => __( 'Item Attributes', 'wporg' ),
 		'parent_item_colon'     => __( 'Parent Item:', 'wporg' ),
 		'all_items'             => __( 'All Items', 'wporg' ),
-		'add_new_item'          => __( 'Add New Item', 'wporg' ),
+		'add_new_item'          => __( 'Add New Company', 'wporg' ),
 		'add_new'               => __( 'Add New', 'wporg' ),
 		'new_item'              => __( 'New Item', 'wporg' ),
 		'edit_item'             => __( 'Edit Item', 'wporg' ),
@@ -58,11 +58,11 @@ function register_custom_post_type() {
 	);
 
 	$args = array(
-		'label'               => __( 'Post Type', 'wporg' ),
-		'description'         => __( 'Post Type Description', 'wporg' ),
+		'label'               => __( 'Company Type', 'wporg' ),
+		'description'         => __( 'Company Type Description', 'wporg' ),
 		'labels'              => $labels,
 		'supports'            => array( 'title', 'editor', 'revisions', 'author' ),
-		'taxonomies'          => array( '5ftf_tax' ),
+		//'taxonomies'          => array( '5ftf_tax' ),
 		'hierarchical'        => false,
 		'public'              => true,
 		'show_ui'             => true,
@@ -73,12 +73,13 @@ function register_custom_post_type() {
 		'can_export'          => false,
 		'has_archive'         => false,
 		'exclude_from_search' => true,
-		'publicly_queryable'  => true,
+		'publicly_queryable'  => true,  //false?
 		'capability_type'     => 'page',
 		'show_in_rest'        => true,
+		// rewerite url to be pretty
 	);
 
-	register_post_type( '5ftf_post', $args );
+	register_post_type( CPT_SLUG, $args );
 }
 
 /**
@@ -86,6 +87,7 @@ function register_custom_post_type() {
  */
 function register_custom_taxonomy() {
 	// TODO update the labels
+	/*
 	$labels = array(
 		'name'                       => _x( 'Companies', 'Company General Name', 'wporg' ),
 		'singular_name'              => _x( 'Company', 'Company Singular Name', 'wporg' ),
@@ -120,7 +122,8 @@ function register_custom_taxonomy() {
 		'show_in_rest'      => true,
 	);
 
-	register_taxonomy( '5ftf_company', array( CPT_SLUG ), $args );
+	register_taxonomy( CPT_SLUG, array( CPT_SLUG ), $args );
+	*/
 
 
 	// also add one for skills - design,dev, project management, etc
