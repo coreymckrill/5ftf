@@ -6,21 +6,25 @@
  */
 
 namespace WordPressDotOrg\FiveForTheFuture\Blocks;
-use WordPressDotOrg\FiveForTheFuture\Company;
 use WordPressDotOrg\FiveForTheFuture;
+use WordPressDotOrg\FiveForTheFuture\Company;
 
 defined( 'WPINC' ) || die();
 
 function enqueue_scripts() {
+	global $post;
 
 	wp_register_script(
 		'5ftf-list',
-		plugins_url( 'assets/js/front-end.js', __FILE__ ),
-		array( 'jquery', 'underscore' ),
+		plugins_url( 'assets/js/front-end.js', __DIR__ ),
+		array( 'jquery', 'underscore', 'wp-util' ),
 		filemtime( FiveForTheFuture\PATH . '/assets/js/front-end.js' ),
 		true
 	);
 
+	if ( ! is_a( $post, 'WP_Post' ) || ! has_shortcode( $post->post_content, 'five_for_the_future_companies' ) ) {
+		return;
+	}
 	// if ! post || ! has shortcode, return
 
 	$params = array(
@@ -32,10 +36,23 @@ function enqueue_scripts() {
 	);
 
 	$companies = get_posts( $params );
-//var_dump($companies);wp_die();
+
+	foreach ( $companies as $key => $company ) {
+		$teams = get_post_meta( $company->ID, '_5ftf_teams', false );
+
+		$companies[ $key ] = array(
+			'name'                  => $company->post_title,
+			'total_employees'       => $company->_5ftf_total_employees,
+			'employees_pledged'     => $company->_5ftf_sponsored_employees,
+			'hours_per_week'        => $company->_5ftf_hours_per_week,
+			'teams_contributing_to' => implode( ', ', $teams ),
+		);
+	}
+
+	$inline_script = sprintf( "var fiveFutureCompanies = %s;", wp_json_encode( $companies ) );
 
 	wp_enqueue_script( '5ftf-list' );
-	wp_add_inline_script( '5ftf-list', array( 'companies' => wp_json_encode( $companies ) ) );
+	wp_add_inline_script( '5ftf-list', $inline_script );
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts' );
 
@@ -53,7 +70,7 @@ function render_shortcode() {
 	return ob_get_clean();
 }
 
-add_shortcode( 'five_for_the_future_list', __NAMESPACE__ . '\render_shortcode' );
+add_shortcode( 'five_for_the_future_companies', __NAMESPACE__ . '\render_shortcode' );
 
 // shortcode for pledge form
 // form handler for pledge form

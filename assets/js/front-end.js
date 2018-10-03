@@ -3,42 +3,38 @@ window.wp = window.wp || {};
 jQuery( function( $ ) {
 	'use strict';
 
-	var communityEventsData = window.communityEventsData || {},
-		app;
+	var allCompanies = window.fiveFutureCompanies || {};
 
-
-	/**
-	 * Global Community Events namespace.
-	 *
-	 * @since 4.8.0
-	 *
-	 * @memberOf wp
-	 * @namespace wp.communityEvents
-	 */
-	app = window.wp.communityEvents = {
-		initialized: false,
-		model: null,
-
-		/**
-		 * Initializes the wp.communityEvents object.
-		 *
-		 * @since 4.8.0
-		 *
-		 * @returns {void}
-		 */
+	var app = window.wp.FiveForTheFuture = {
+		// jsdoc
 		init: function() {
-			if ( app.initialized ) {
-				return;
-			}
+			app.renderTemplate( allCompanies );
 
-			var template,
-			    $container = $( '#5ftf-companies' );
+			$( '#5ftf-search' ).keyup( app.searchCompanies );  // debounce?
+				// works on keyup but not change. isn't change better?
+			$( '.5ftf-toggle-order' ).click( app.orderCompanies );
+		},
 
-			template = wp.template( '5ftf-companies' );
-			$container.html( template( templateParams ) );
+		renderTemplate: function( companies ) {
+			var $container = $( '#5ftf-companies' ),
+			    template   = wp.template( '5ftf-companies' );
+
+			$container.html( template( companies ) );
+		},
+
+		searchCompanies: function( event ) {
+			var matches = $.extend( true, [], allCompanies );
+
+			matches = _.filter( matches, function( company ) {
+				return -1 !== company.name.indexOf( $( event.target ).val() );
+			} );
+
+			app.renderTemplate( matches );
+		},
+
+		orderCompanies: function( event ) {
+			// _.sortBy ?
 		}
-
-		// re-render after sorting
 	};
 
 	app.init();
