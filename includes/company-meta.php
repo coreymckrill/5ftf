@@ -6,7 +6,7 @@
 
 namespace WordPressDotOrg\FiveForTheFuture\CompanyMeta;
 use WordPressDotOrg\FiveForTheFuture\Company;
-use WP_Post;
+use WP_Post, WP_Error;
 
 defined( 'WPINC' ) || die();
 
@@ -31,38 +31,47 @@ function get_company_meta_config() {
 		'company-name' => [
 			'show_in_rest'      => true,
 			'sanitize_callback' => 'sanitize_text_field',
+			'required'          => true,
 		],
 		'company-url' => [
 			'show_in_rest'      => true,
 			'sanitize_callback' => 'esc_url_raw',
+			'required'          => true,
 		],
 		'company-email' => [
 			'show_in_rest'      => false,
 			'sanitize_callback' => 'sanitize_email',
+			'required'          => true,
 		],
 		'company-phone' => [
 			'show_in_rest'      => false,
 			'sanitize_callback' => 'sanitize_text_field',
+			'required'          => false,
 		],
 		'company-total-employees' => [
 			'show_in_rest'      => true,
 			'sanitize_callback' => 'absint',
+			'required'          => true,
 		],
 		'contact-name' => [
 			'show_in_rest'      => false,
 			'sanitize_callback' => 'sanitize_text_field',
+			'required'          => true,
 		],
 		'contact-wporg-username' => [
 			'show_in_rest'      => false,
 			'sanitize_callback' => 'sanitize_user',
+			'required'          => true,
 		],
 		'pledge-hours' => [
 			'show_in_rest'      => true,
 			'sanitize_callback' => 'absint',
+			'required'          => true,
 		],
 		'pledge-agreement' => [
 			'show_in_rest'      => false,
 			'sanitize_callback' => 'wp_validate_boolean',
+			'required'          => true,
 		],
 	];
 }
@@ -116,6 +125,37 @@ function markup_meta_boxes( $company, $box ) {
 }
 
 /**
+ * Check that an array contains values for all required keys.
+ *
+ * @return bool|WP_Error True if all required values are present.
+ */
+function has_required_company_meta( array $values ) {
+	$config   = get_company_meta_config();
+	$plucked  = wp_list_pluck( get_company_meta_config(), 'required' );
+	$required = array_combine( array_keys( $config ), $plucked );
+
+	$required_keys = array_keys( $required, true );
+	$error         = new WP_Error();
+
+	foreach ( $required_keys as $key ) {
+		if ( ! isset( $values[ $key ] ) || empty( $values[ $key ] ) ) {
+			$error->add(
+				'required_field',
+				__( 'Please fill all required fields.', 'wporg' )
+			);
+
+			break;
+		}
+	}
+
+	if ( ! empty( $error->get_error_messages() ) ) {
+		return $error;
+	}
+
+	return true;
+}
+
+/**
  * Save the company data
  *
  * @param int     $company_id
@@ -133,6 +173,10 @@ function save_company( $company_id, $company ) {
 	}
 
 	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || $company->post_status == 'auto-draft' ) {
+		return;
+	}
+
+	if ( is_wp_error( has_required_company_meta( $_POST ) ) ) {
 		return;
 	}
 
@@ -155,6 +199,8 @@ function save_company_meta( $company_id, $new_values ) {
 		$meta_key = META_PREFIX . $key;
 
 		if ( isset( $new_values[ $key ] ) ) {
+			// Since the sanitize callback is called during this function, it could still end up
+			// saving an empty value to the database.
 			update_post_meta( $company_id, $meta_key, $new_values[ $key ] );
 		} else {
 			delete_post_meta( $company_id, $meta_key );
