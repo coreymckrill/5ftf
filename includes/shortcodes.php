@@ -7,8 +7,37 @@
 
 namespace WordPressDotOrg\FiveForTheFuture\Blocks;
 use WordPressDotOrg\FiveForTheFuture\Company;
+use WordPressDotOrg\FiveForTheFuture;
 
 defined( 'WPINC' ) || die();
+
+function enqueue_scripts() {
+
+	wp_register_script(
+		'5ftf-list',
+		plugins_url( 'assets/js/front-end.js', __FILE__ ),
+		array( 'jquery', 'underscore' ),
+		filemtime( FiveForTheFuture\PATH . '/assets/js/front-end.js' ),
+		true
+	);
+
+	// if ! post || ! has shortcode, return
+
+	$params = array(
+		'post_type'      => Company\CPT_SLUG,
+		'post_status'    => 'publish',
+		'posts_per_page' => 100,
+		'orderby'        => 'title',
+		'order'          => 'ASC',
+	);
+
+	$companies = get_posts( $params );
+//var_dump($companies);wp_die();
+
+	wp_enqueue_script( '5ftf-list' );
+	wp_add_inline_script( '5ftf-list', array( 'companies' => wp_json_encode( $companies ) ) );
+}
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts' );
 
 /**
  * todo
@@ -16,22 +45,15 @@ defined( 'WPINC' ) || die();
  * @return string
  */
 function render_shortcode() {
-	$params = array(
-		'post_type'      => Company\CPT_SLUG,
-		'post_status'    => 'publish',
-		'posts_per_page' => 2,
-		'orderby'        => 'rand',
-		// todo also in the "featured" taxonomy
-	);
-
-	$contributors = get_posts( $params );
+	// The limit is just a sanity check, but ideally all should be displayed.
+	// If this is reached, then refactor the page to lazy-load, etc.
 
 	ob_start();
 	require_once( dirname( __DIR__ ) . '/views/front-end.php' );
 	return ob_get_clean();
 }
 
-add_shortcode( 'five_for_the_future', __NAMESPACE__ . '\render_shortcode' );
+add_shortcode( 'five_for_the_future_list', __NAMESPACE__ . '\render_shortcode' );
 
 // shortcode for pledge form
 // form handler for pledge form
