@@ -10,17 +10,66 @@ use WP_Post;
 
 defined( 'WPINC' ) || die();
 
+const META_PREFIX = '5ftf-';
+
 /**
  *
  */
 function register() {
-	//register_meta();
-	// todo?
-	// some contribors might not want hours_per_month being public
+	register_company_meta();
 }
 
 add_action( 'init', __NAMESPACE__ . '\register' );
 
+/**
+ * Register post meta keys for the Company post type.
+ */
+function register_company_meta() {
+	$meta = [
+		'company-name' => [
+			'show_in_rest'      => true,
+			'sanitize_callback' => 'sanitize_text_field',
+		],
+		'company-url' => [
+			'show_in_rest'      => true,
+			'sanitize_callback' => 'esc_url_raw',
+		],
+		'company-email' => [
+			'show_in_rest'      => false,
+			'sanitize_callback' => 'sanitize_email',
+		],
+		'company-phone' => [
+			'show_in_rest'      => false,
+			'sanitize_callback' => 'sanitize_text_field',
+		],
+		'company-total-employees' => [
+			'show_in_rest'      => true,
+			'sanitize_callback' => 'absint',
+		],
+		'contact-name' => [
+			'show_in_rest'      => false,
+			'sanitize_callback' => 'sanitize_text_field',
+		],
+		'contact-wporg-username' => [
+			'show_in_rest'      => false,
+			'sanitize_callback' => 'sanitize_user',
+		],
+		'pledge-hours' => [
+			'show_in_rest'      => true,
+			'sanitize_callback' => 'absint',
+		],
+		'pledge-agreement' => [
+			'show_in_rest'      => false,
+			'sanitize_callback' => 'wp_validate_boolean',
+		],
+	];
+
+	foreach ( $meta as $key => $args ) {
+		$meta_key = META_PREFIX . $key;
+
+		register_post_meta( Company\CPT_SLUG, $meta_key, $args );
+	}
+}
 
 /**
  * Adds meta boxes for the custom post type
@@ -107,8 +156,8 @@ function save_company_meta( $company_id, $new_values ) {
 	// maybe set the wporg username as the company author, so they can edit it themselves to keep it updated,
 	// then make the user a contributor if they don't already have a role on the site
 	// setup cron to automatically email once per quarter
-		// "here's all the info we have: x, y, z"
-		// is that still accurate? if not, click here to update it
-		// if want to be removed from public listing, emailing support@wordcamp.org
+	// "here's all the info we have: x, y, z"
+	// is that still accurate? if not, click here to update it
+	// if want to be removed from public listing, emailing support@wordcamp.org
 	// don't let them edit the "featured" taxonomy, only admins
 }

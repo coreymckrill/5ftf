@@ -84,7 +84,6 @@
 		</div>
 	</fieldset>
 
-
 	<div>
 		<input type="submit" id="5ftf-pledge-submit" name="pledge-submit" class="button button-primary" value="<?php esc_attr_e( 'Submit', 'wporg' ); ?>" />
 	</div>
