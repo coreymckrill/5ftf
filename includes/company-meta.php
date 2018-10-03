@@ -22,10 +22,12 @@ function register() {
 add_action( 'init', __NAMESPACE__ . '\register' );
 
 /**
- * Register post meta keys for the Company post type.
+ * Define company meta fields and their properties.
+ *
+ * @return array
  */
-function register_company_meta() {
-	$meta = [
+function get_company_meta_config() {
+	return [
 		'company-name' => [
 			'show_in_rest'      => true,
 			'sanitize_callback' => 'sanitize_text_field',
@@ -63,6 +65,13 @@ function register_company_meta() {
 			'sanitize_callback' => 'wp_validate_boolean',
 		],
 	];
+}
+
+/**
+ * Register post meta keys for the Company post type.
+ */
+function register_company_meta() {
+	$meta = get_company_meta_config();
 
 	foreach ( $meta as $key => $args ) {
 		$meta_key = META_PREFIX . $key;
@@ -140,17 +149,16 @@ add_action( 'save_post', __NAMESPACE__ . '\save_company', 10, 2 );
  * @param array $new_values
  */
 function save_company_meta( $company_id, $new_values ) {
-	if ( isset( $new_values[ '_5ftf_wporg_username' ] ) ) {
-		// todo validate username
-		update_post_meta( $company_id, '_5ftf_wporg_username', $new_values[ '_5ftf_wporg_username' ] );
-	} else {
-		delete_post_meta( $company_id, '_5ftf_wporg_username' );
-	}
+	$keys = array_keys( get_company_meta_config() );
 
-	if ( isset( $new_values[ '_5ftf_hours_per_month' ] ) ) {
-		update_post_meta( $company_id, '_5ftf_hours_per_month', absint( $new_values[ '_5ftf_hours_per_month' ] ) );
-	} else {
-		delete_post_meta( $company_id, '_5ftf_hours_per_month' );
+	foreach ( $keys as $key ) {
+		$meta_key = META_PREFIX . $key;
+
+		if ( isset( $new_values[ $key ] ) ) {
+			update_post_meta( $company_id, $meta_key, $new_values[ $key ] );
+		} else {
+			delete_post_meta( $company_id, $meta_key );
+		}
 	}
 
 	// maybe set the wporg username as the company author, so they can edit it themselves to keep it updated,
