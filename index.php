@@ -21,6 +21,7 @@ function load() {
 	require_once PATH . 'includes/company.php';
 	require_once PATH . 'includes/company-meta.php';
 	require_once PATH . 'includes/shortcodes.php';
+	require_once PATH . 'includes/pledge-form.php';
 }
 
 add_action( 'plugins_loaded', __NAMESPACE__ . '\load' );
