@@ -1,4 +1,6 @@
-<?php // todo i18n ?>
+<?php // todo i18n
+//// change all id/class prefixes to fftf (or something better) b/c not valid to start w/ number
+///  ?>
 
 <article class="5ftf">
 	<section class="about">
@@ -36,23 +38,23 @@
 				<tr>
 					<td>
 						Company
-						<button class="5ftf-toggle-order">^</button>
+						<button class="5ftf-sorting-indicator 5ftf-current-sorter" data-field="name">^</button>
 					</td>
 					<td>
 						Total # Employees
-						<span class="toggle-order"></span>
+						<button class="5ftf-sorting-indicator" data-field="total_employees">^</button>
 					</td>
 					<td>
 						# Employees Pledged
-						<span class="toggle-order"></span>
+						<button class="5ftf-sorting-indicator" data-field="donated_employees">^</button>
 					</td>
 					<td>
 						Hours Pledged per Week
-						<span class="toggle-order"></span>
+						<button class="5ftf-sorting-indicator" data-field="hours_per_week">^</button>
 					</td>
 					<td>
 						Teams Contributing To
-						<span class="toggle-order"></span>
+						<?php // This can't really be sorted in a meaningful way, since multiple teams are listed here ?>
 					</td>
 				</tr>
 			</thead>

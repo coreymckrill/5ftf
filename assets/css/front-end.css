@@ -1,1 +1,5 @@
 /* copy homepage styles except those trendy fixed bg images */
+.fftf-sorting-indicator::before {
+	content: "\f142";
+	font: normal 20px/1 dashicons;
+}

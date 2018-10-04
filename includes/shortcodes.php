@@ -22,10 +22,16 @@ function enqueue_scripts() {
 		true
 	);
 
+	wp_register_style(
+		'5ftf-front-end',
+		plugins_url( 'assets/css/front-end.css', __DIR__ ),
+		array( 'dashicons' ),
+		filemtime( FiveForTheFuture\PATH . '/assets/css/front-end.css' )
+	);
+
 	if ( ! is_a( $post, 'WP_Post' ) || ! has_shortcode( $post->post_content, 'five_for_the_future_companies' ) ) {
 		return;
 	}
-	// if ! post || ! has shortcode, return
 
 	$params = array(
 		'post_type'      => Company\CPT_SLUG,
@@ -42,6 +48,7 @@ function enqueue_scripts() {
 
 		$companies[ $key ] = array(
 			'name'                  => $company->post_title,
+			'url'                   => $company->_5ftf_url,
 			'total_employees'       => $company->_5ftf_total_employees,
 			'employees_pledged'     => $company->_5ftf_sponsored_employees,
 			'hours_per_week'        => $company->_5ftf_hours_per_week,
@@ -51,6 +58,7 @@ function enqueue_scripts() {
 
 	$inline_script = sprintf( "var fiveFutureCompanies = %s;", wp_json_encode( $companies ) );
 
+	wp_enqueue_style( '5ftf-front-end' );
 	wp_enqueue_script( '5ftf-list' );
 	wp_add_inline_script( '5ftf-list', $inline_script );
 }
