@@ -87,6 +87,9 @@ function register_custom_post_type() {
  */
 function register_custom_taxonomy() {
 	// TODO update the labels
+
+	// add taxonomy for teams
+
 	/*
 	$labels = array(
 		'name'                       => _x( 'Companies', 'Company General Name', 'wporg' ),

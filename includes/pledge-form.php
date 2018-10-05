@@ -65,6 +65,7 @@ function process_form( array $form_values ) {
 	}
 
 	CompanyMeta\save_company_meta( $created, $form_values );
+	// save teams contirbuted to as terms
 
 	return 'success';
 }

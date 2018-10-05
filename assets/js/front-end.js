@@ -13,39 +13,49 @@ jQuery( function( $ ) {
 
 			$( '#5ftf-search' ).keyup( app.searchCompanies );
 				// works on keyup but not change. isn't change better?
-			$( '.5ftf-sorting-indicator' ).click( app.orderCompanies );
+			$( '.fftf-sorting-indicator' ).click( app.orderCompanies );
 		},
 
+		//
 		renderTemplate: function( companies ) {
-			var $container = $( '#5ftf-companies' ),
+			var $container = $( '#5ftf-companies-body' ),
 			    template   = wp.template( '5ftf-companies' );
 
 			$container.html( template( companies ) );
 		},
 
+		//
 		searchCompanies: function( event ) {
-			var matches = $.extend( true, [], allCompanies );
+			var matches = $.extend( true, [], allCompanies ),
+				query = $( event.target ).val().toLowerCase();
 
 			matches = _.filter( matches, function( company ) {
-				return -1 !== company.name.indexOf( $( event.target ).val() );
+				return -1 !== company.name.toLowerCase().indexOf( query );
 			} );
 
 			app.renderTemplate( matches );
 		},
 
+		//
 		orderCompanies: function( event ) {
-			allCompanies = _.sortBy( allCompanies, $( event.target ).data( 'field' ) );
+			var $activeSortButton = $( event.target ),
+			    $activeSortColumn = $activeSortButton.parent( 'th' ),
+				$sortColumns      = $( '.fftf-sorting-indicator' );
+
+			allCompanies = _.sortBy( allCompanies, $activeSortButton.data( 'field' ) );
+
+			$sortColumns.removeClass( 'fftf-sorted-ascending' );
+			$sortColumns.removeClass( 'fftf-sorted-descending' );
 
 			if ( 'ascending' === sortOrder ) {
 				sortOrder    = 'descending';
 				allCompanies = allCompanies.reverse();
-				// set button value to be up/down
+
+				$activeSortColumn.addClass( 'fftf-sorted-descending' );
 			} else {
 				sortOrder = 'ascending';
-				// set button value to be up/down
+				$activeSortColumn.addClass( 'fftf-sorted-ascending' );
 			}
-
-			// add/remove 5ftf-current-sorter class
 
 			app.renderTemplate( allCompanies );
 		}

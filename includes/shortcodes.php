@@ -34,6 +34,8 @@ function enqueue_scripts() {
 	}
 
 	$params = array(
+		// explain 100 is just sanity limit to keep page size performant. might need to lazy-load more in the future
+		// maybe order by donated_employees, or rand, to ensure the top companies are always displayed first, or to make sure treta everyone equal
 		'post_type'      => Company\CPT_SLUG,
 		'post_status'    => 'publish',
 		'posts_per_page' => 100,
@@ -50,7 +52,7 @@ function enqueue_scripts() {
 			'name'                  => $company->post_title,
 			'url'                   => $company->_5ftf_url,
 			'total_employees'       => $company->_5ftf_total_employees,
-			'employees_pledged'     => $company->_5ftf_sponsored_employees,
+			'sponsored_employees'   => $company->_5ftf_sponsored_employees,
 			'hours_per_week'        => $company->_5ftf_hours_per_week,
 			'teams_contributing_to' => implode( ', ', $teams ),
 		);

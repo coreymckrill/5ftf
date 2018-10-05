@@ -33,33 +33,33 @@
 			<input type="text" id="5ftf-search" name="5ftf-search" />
 		</form>
 
-		<table>
+		<table class="fftf-companies">
 			<thead>
 				<tr>
-					<td>
+					<th class="fftf-sorted-ascending">
 						Company
-						<button class="5ftf-sorting-indicator 5ftf-current-sorter" data-field="name">^</button>
-					</td>
-					<td>
+						<button class="fftf-sorting-indicator" data-field="name"></button>
+					</th>
+					<th>
 						Total # Employees
-						<button class="5ftf-sorting-indicator" data-field="total_employees">^</button>
-					</td>
-					<td>
-						# Employees Pledged
-						<button class="5ftf-sorting-indicator" data-field="donated_employees">^</button>
-					</td>
-					<td>
+						<button class="fftf-sorting-indicator" data-field="total_employees"></button>
+					</th>
+					<th>
+						# Sponsored Employees
+						<button class="fftf-sorting-indicator" data-field="sponsored_employees"></button>
+					</th>
+					<th>
 						Hours Pledged per Week
-						<button class="5ftf-sorting-indicator" data-field="hours_per_week">^</button>
-					</td>
-					<td>
+						<button class="fftf-sorting-indicator" data-field="hours_per_week"></button>
+					</th>
+					<th>
 						Teams Contributing To
 						<?php // This can't really be sorted in a meaningful way, since multiple teams are listed here ?>
-					</td>
+					</th>
 				</tr>
 			</thead>
 
-			<tbody id="5ftf-companies">
+			<tbody id="5ftf-companies-body">
 				<tr>
 					<td colspan="5">
 						<?php _e( 'Loading&hellip;' ); ?>
@@ -77,7 +77,7 @@
 						</th>
 
 						<td>{{company.total_employees}}</td>
-						<td>{{company.employees_pledged}}</td>
+						<td>{{company.sponsored_employees}}</td>
 						<td>{{company.hours_per_week}}</td>
 						<td>
 							{{company.teams_contributing_to}}

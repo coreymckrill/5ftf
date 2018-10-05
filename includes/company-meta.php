@@ -53,6 +53,7 @@ function get_company_meta_config() {
 			'sanitize_callback' => 'absint',
 			'required'          => true,
 		],
+		// todo add # sponsored employees here and also to form, etc
 		'contact-name' => [
 			'show_in_rest'      => false,
 			'sanitize_callback' => 'sanitize_text_field',
